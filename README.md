@@ -1,5 +1,7 @@
 # favourite-movies
+A list of movies to watch - Movies can be added and removed - Movie details received from themoviedb
 
+Built with Vue.js
 ## Project setup
 ```
 npm install
