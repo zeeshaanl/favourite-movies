@@ -1,5 +1,5 @@
 <template>
-    <div v-bind:class="['c-movie', { 'c-movie--selected' : isCurrentMovieSelected(movie.id) }]" v-on:click='saveMovie(movie)'>
+    <div v-bind:class="['c-movie', { 'c-movie--selected' : isCurrentMovieSelected(movie.id) }]" @click='saveMovie(movie)'>
         <header class='c-movie__header'>{{movie.title}}</header>
         <main>
             <section class='c-movie__poster'>
@@ -13,56 +13,66 @@
 </template>
 
 <script>
-    export default {
-        props: {
-            movie: Object,
-            items: Array,
-            saveMovie: Function,
-            isCurrentMovieSelected: Function
-        },
-        data() {
-            return {
-                baseImageUrl: 'https://image.tmdb.org/t/p/w200/'
-            }
-        },
-        name: "movie-block"
-    }
+export default {
+  props: {
+    movie: Object,
+    items: Array,
+    saveMovie: Function,
+    isCurrentMovieSelected: Function
+  },
+  data() {
+    return {
+      baseImageUrl: "https://image.tmdb.org/t/p/w200/"
+    };
+  },
+  name: "movie-block"
+};
 </script>
 
 <style lang='scss'>
-    .c-movie {
-        border: 1px solid lightgray;
-        border-radius: 6px;
-        position: relative;
-        /*padding: 1rem;*/
-        margin: 1rem 0;
-        height: 500px;
-    }
+.c-movie {
+  border: 1px solid lightgray;
+  border-radius: 6px;
+  position: relative;
+  /*padding: 1rem;*/
+  margin: 1rem 0;
+  height: 500px;
+}
 
-    .c-movie:hover, .c-movie--selected {
-        cursor: pointer;
-        background-color: lightpink;
-        border-color: darkgrey;
-    }
+.c-movie:hover {
+  cursor: pointer;
+  background-color: lightsteelblue;
+}
 
-    .c-movie__header {
-        font-weight: 600;
-        font-size: 18px;
-        padding: 0.5em;
-    }
+@media (hover: none) {
+  .c-movie {
+    background-color: white;
+  }
+}
 
-    .c-movie__overview {
-        /*text-overflow: ellipsis;*/
-        /*white-space: nowrap;*/
-        overflow: hidden;
-        width: 80%;
-        height: 120px;
-        text-align: left;
-        margin: 0 auto;
-    }
+.c-movie--selected {
+  border: 2px solid;
+  border-color: steelblue;
+}
 
-    .c-movie__poster img {
-        max-width: 100%;
-        height: auto;
-    }
+.c-movie__header {
+  font-weight: 600;
+  font-size: 18px;
+  padding: 0.5em;
+}
+
+.c-movie__overview {
+  /*text-overflow: ellipsis;*/
+  /*white-space: nowrap;*/
+  overflow: hidden;
+  width: 80%;
+  height: 120px;
+  text-align: left;
+  margin: 0 auto;
+}
+
+.c-movie__poster img {
+  max-width: 100%;
+  height: auto;
+}
 </style>
