@@ -5,26 +5,24 @@
     </header>
     <main>
       <section>
-        <input v-model='currentMovieTitle' v-on:input='searchMoviesHandler' type='text' />
+        <input v-model="currentMovieTitle" type="text" @input="searchMoviesHandler">
       </section>
-      <div class='c-results'>
-        <!--<h4 v-if='loading'>-->
-        <!--Loading...-->
-        <!--</h4>-->
-        <div class='c-movie-tile' v-if='moviesToAdd && moviesToAdd.length > 0' v-for="movie in moviesToAdd" v-bind:key='movie.id'>
-          <MovieBlock v-bind='{movie, saveMovie, isCurrentMovieSelected}' />
+      <div v-if="moviesToAdd && moviesToAdd.length > 0" class="c-results">
+        <div v-for="movie in moviesToAdd" :key="movie.id" class="c-movie-tile">
+          <MovieBlock v-bind="{movie, saveMovie, isCurrentMovieSelected}" />
         </div>
       </div>
 
       <section>
         <h3>Saved Movies</h3>
-        <div v-for='movie in savedMovies' v-bind:key='movie.id'>
+        <div v-for="movie in orderedSavedMovies" :key="movie.id">
           <div>
-            {{movie.title}}
+            {{ movie.title }}
+            <span class="remove-movie" @click="removeMovie(movie.id)"> x</span>
           </div>
         </div>
       </section>
-      <h4 v-if='currentMovieTitle && errored'>
+      <h4 v-if="currentMovieTitle && errored">
         Error loading movies
       </h4>
     </main>
@@ -35,6 +33,8 @@
 import MovieService from "../services/MovieService";
 import MovieServiceImpl from "../axios/MovieServiceImpl";
 import debounce from "lodash/debounce";
+import orderBy from "lodash/orderBy";
+
 import MovieBlock from "./components/MovieBlock.vue";
 import FavouriteMovieRepo from "../repo/FavouriteMovieRepo.js";
 import FavouriteMovieRepoImpl from "../firebase/FavouriteMovieRepoImpl.js";
@@ -43,15 +43,10 @@ const movieApi = new MovieServiceImpl();
 const movieService = new MovieService(movieApi);
 
 export default {
-  name: "app",
+  name: "App",
   components: { MovieBlock },
   props: {
     movieRepo: Object
-  },
-  created() {
-    this.movieRepo.subscribeToSavedMovies(movies => {
-      this.savedMovies = movies;
-    })
   },
   data() {
     return {
@@ -62,6 +57,16 @@ export default {
       savedMovies: {},
       moviesToAdd: null
     };
+  },
+  computed: {
+    orderedSavedMovies: function () {
+      return orderBy(this.savedMovies, 'timestamp');
+    }
+  },
+  created() {
+    this.movieRepo.subscribeToSavedMovies(movies => {
+      this.savedMovies = movies;
+    })
   },
   methods: {
     searchMoviesHandler() {
@@ -79,6 +84,8 @@ export default {
         const movieList = await movieService.getMovieDetails(
           this.currentMovieTitle
         );
+        console.log(movieList);
+
         this.moviesToAdd = movieList;
         this.loading = false;
       } catch (error) {
@@ -95,10 +102,18 @@ export default {
         this.errored = true;
       }
     },
+    async removeMovie(movieId) {
+      try {
+        await this.movieRepo.removeMovie(movieId);
+      } catch (error) {
+        console.log(error, "error removing movie");
+        this.errored = true;
+      }
+    },
     isCurrentMovieSelected(movieId) {
       return !!this.savedMovies[movieId];
     }
-  }
+  },
 };
 </script>
 
@@ -119,12 +134,17 @@ export default {
   }
 }
 
+.remove-movie {
+  font-weight: 500;
+  cursor: pointer;
+}
+
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 20px;
 }
 </style>

@@ -7,6 +7,10 @@ export default class FavouriteMovieRepo {
     this.databaseImplementation.saveMovie(movie);
   }
 
+  removeMovie(movieId) {
+    this.databaseImplementation.removeMovie(movieId);
+  }
+
   subscribeToSavedMovies(callback) {
     this.databaseImplementation.subscribeToSavedMovies(callback);
   }

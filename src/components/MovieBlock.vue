@@ -1,22 +1,22 @@
 <template>
-    <div v-bind:class="['c-movie', { 'c-movie--selected' : isCurrentMovieSelected(movie.id) }]" @click='saveMovie(movie)'>
-        <header class='c-movie__header'>{{movie.title}}</header>
-        <main>
-            <section class='c-movie__poster'>
-                <img v-bind:src='baseImageUrl+movie.poster_path' />
-            </section>
-            <section class='c-movie__overview'>
-                {{movie.overview}}
-            </section>
-        </main>
-    </div>
+  <div :class="['c-movie', { 'c-movie--selected' : isCurrentMovieSelected(movie.id) }]" @click="saveMovie(movie)">
+    <header class="c-movie__header">{{ movie.title }}</header>
+    <main>
+      <section class="c-movie__poster">
+        <img :src="baseImageUrl+movie.poster_path">
+      </section>
+      <section class="c-movie__overview">
+        {{ movie.overview }}
+      </section>
+    </main>
+  </div>
 </template>
 
 <script>
 export default {
+  name: "MovieBlock",
   props: {
     movie: Object,
-    items: Array,
     saveMovie: Function,
     isCurrentMovieSelected: Function
   },
@@ -25,7 +25,6 @@ export default {
       baseImageUrl: "https://image.tmdb.org/t/p/w200/"
     };
   },
-  name: "movie-block"
 };
 </script>
 
@@ -62,8 +61,6 @@ export default {
 }
 
 .c-movie__overview {
-  /*text-overflow: ellipsis;*/
-  /*white-space: nowrap;*/
   overflow: hidden;
   width: 80%;
   height: 120px;

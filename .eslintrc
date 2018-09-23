@@ -3,12 +3,19 @@
     "browser": true,
     "jest": true
   },
-  "parser": "babel-eslint",
+  "parserOptions": {
+    "parser": "babel-eslint",
+    "sourceType": "module",
+    "allowImportExportEverywhere": false,
+    "codeFrame": true
+  },
   "plugins": [
     "vue"
   ],
   "rules": {
+    "vue/max-attributes-per-line": [0],
+    "vue/require-default-prop": [0],
     "no-console": [0]
   },
-  "extends": ["plugin:vue/essential"]
+  "extends": ["plugin:vue/recommended"]
 }

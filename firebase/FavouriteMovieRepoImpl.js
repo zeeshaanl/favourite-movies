@@ -19,6 +19,15 @@ export default class FavouriteMovieRepoImpl {
     }
   }
 
+  async removeMovie(movieId) {
+    console.log(movieId, 'in removemovie in firebaseimple');
+    try {
+      await firebase.database().ref(`/favouriteMovies/`).child(movieId).remove();;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async subscribeToSavedMovies(callback) {
     try {
       await firebase.database().ref(`/`).on('value', (snapshot) => {
