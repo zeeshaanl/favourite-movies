@@ -9,7 +9,7 @@
       </section>
       <div v-if="moviesToAdd && moviesToAdd.length > 0" class="c-results">
         <div v-for="movie in moviesToAdd" :key="movie.id" class="c-movie-tile">
-          <MovieBlock v-bind="{movie, saveMovie, isCurrentMovieSelected}" />
+          <MovieBlock v-bind="{movie, saveMovie, removeMovie, isCurrentMovieSelected}" />
         </div>
       </div>
 
@@ -77,6 +77,7 @@ export default {
         this.getMovieDetails();
       }
     },
+
     getMovieDetails: debounce(async function getMovieDetails() {
       try {
         this.loading = true;
@@ -92,7 +93,9 @@ export default {
         this.errored = true;
       }
     }, 300),
-    async saveMovie(movie) {
+
+    async saveMovie(movieId) {
+      const movie = this.moviesToAdd.find(movie => movie.id === movieId);
       const dateOfSaving = new Date().valueOf();
       const newMovieEntry = { ...movie, timestamp: dateOfSaving };
       try {
@@ -102,7 +105,9 @@ export default {
         this.errored = true;
       }
     },
+
     async removeMovie(movieId) {
+        console.log('REMOVE MOVE', movieId);
       try {
         await this.movieRepo.removeMovie(movieId);
       } catch (error) {
@@ -110,9 +115,11 @@ export default {
         this.errored = true;
       }
     },
+
     isCurrentMovieSelected(movieId) {
       return !!this.savedMovies[movieId];
     }
+
   },
 };
 </script>
